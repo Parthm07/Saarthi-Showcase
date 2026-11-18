@@ -1,0 +1,33 @@
+;; tdl_probe.txt -- does plain-text TDL load on this licence, and does a
+;; user-defined Collection become queryable over the XML API on :9000?
+;;
+;; This is a READ-ONLY probe. It defines one Collection and changes nothing
+;; about Tally's menus, reports, vouchers or data. Remove the tally.ini line
+;; and restart to undo it completely.
+;;
+;; To try it:
+;;   1. Close Tally.
+;;   2. Add this line to C:\Program Files\TallyPrime\tally.ini
+;;        TDL=D:\Tally Project\tdl_probe.txt
+;;      (leave "User TDL=Yes" as it already is)
+;;   3. Start Tally, load the company.
+;;   4. Run: python tdl_probe_test.py
+;;
+;; If Tally refuses to start, or shows a TDL error on load, the answer is
+;; "this licence will not load source TDL" -- remove the line, restart, and
+;; nothing is lost.
+
+[Collection: ClaudeProbeItems]
+
+    Type         : StockItem
+    Fetch        : Name, BaseUnits, ClosingBalance
+
+;; The real prize: godown-wise stock, which could NOT be reached from an
+;; XML Collection at all (GODOWNNAME never came back, and BatchAllocations
+;; as a WALK returned nothing). If this one answers, TDL buys us something
+;; the XML API genuinely cannot do.
+
+[Collection: ClaudeProbeGodownStock]
+
+    Type         : Batch : StockItem
+    Fetch        : Name, GodownName, ClosingBalance, BatchName

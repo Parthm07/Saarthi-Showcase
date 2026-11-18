@@ -1,0 +1,64 @@
+# credentials -- never commit. The glob matters: .env.broken-backup
+# and friends hold the session secret just as .env does.
+.env
+.env.*
+!.env.example
+
+# local archive: 100+ MB, rebuildable from Tally
+tally_raw.db
+tally_raw.db-journal
+# Local admin requests, results and product photos are private business data.
+saarthi_admin.db
+saarthi_admin.db-*
+
+# agent runtime
+tally_agent.log
+tally_agent.log.*
+tally_agent.lock
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# TallyPrime's OWN company data. This project folder IS Tally's data
+# directory, so these are the live books -- 68 MB of them. Committing this
+# would publish the company's entire accounting database.
+100000/
+*.900
+*.1800
+tallyerr.log
+tallyhttp.log
+
+# A stale copy of the prototype, frozen before the live-data work. The
+# deployed copy is web/; this one only causes confusion.
+Saarthi Sales Copilot/
+
+# Tally's own voucher export, kept as the reference payload (see
+# ARCHITECTURE section 13) -- but nothing else Tally spits out.
+!Sales_4397.xml
+
+# The untouched Tally export. The tracked Sales_4397.xml is redacted;
+# this one still has the real party name, amounts and company GUIDs.
+Sales_4397.original.xml
+
+# Database backups: real customer names, balances and order history.
+cloud_backup/
+
+# Desktop build tools and generated executables. Never bundle local books/config.
+.desktop-build/
+.desktop-build-tools/
+
+# Release signing secrets stay on the development machine.
+.release-signing/
+saarthi-runtime.json
+.saarthi-update-pause
+
+# Private exports and local sync control files.
+*.dump
+*.backup
+*.sqlite
+*.sqlite3
+.saarthi-agent-stopped
+.saarthi-remote-sync.json
+.saarthi-remote-resume

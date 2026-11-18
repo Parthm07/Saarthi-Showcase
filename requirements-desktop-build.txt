@@ -1,0 +1,4 @@
+# Development/build-machine dependencies only. Business laptops use bundled EXEs.
+PyInstaller==6.22.3
+cryptography==50.0.0
+psycopg[binary]==3.3.5

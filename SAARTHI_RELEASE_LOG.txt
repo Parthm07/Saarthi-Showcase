@@ -1,0 +1,155 @@
+SAARTHI FEATURE AND RELEASE LOG
+
+Add a dated entry for each new feature or workflow change. Include the affected
+app, required deployment or data steps, and how to verify the result.
+
+CLOUD SCHEMA PREFLIGHT
+
+1. Compare the live Railway web service's CLOUD_DB_URL with the Neon project,
+   branch, and database you are inspecting. Keep the connection URL private.
+   The current business database is saarthi_live. The same name can exist on
+   multiple branches.
+2. In Neon SQL Editor, select that branch and database. Paste the entire
+   verify_cloud_schema.sql file and click Run. It reads catalogue metadata only.
+3. Check database_name. OK means the expected schema matches. MISSING names a
+   missing object. MISMATCH shows the expected and actual definitions. Review
+   the definition against the migration before applying any change. Equivalent
+   definitions with different names or PostgreSQL output can also be flagged.
+4. Before a release that depends on a schema change, apply the specific
+   migration to the live database and rerun the audit. Deploy after confirming
+   the new dependencies are in place. Verify the affected workflow separately
+   from the schema, using a test environment for order creation and Tally sync.
+
+After changing PostgreSQL schema definitions, regenerate the SQL from a clean
+local PostgreSQL reference. Apply cloud_db.create_schema() to a disposable
+local database named postgres with user saarthi_audit. Set
+SAARTHI_SCHEMA_REFERENCE_PORT to its loopback port and run
+python generate_cloud_schema_audit.py. Commit the updated SQL with the change.
+
+2026-11-15 | One-month Railway Hobby and Neon sizing trial
+Run the existing Railway web service on Hobby with the live Neon database for
+one month from the date the website is restored. Use normal business traffic.
+Record the actual start date, each provider's billing dates, and any changes in
+agent hours, auto-refresh or deployment settings during the test.
+
+Every two days, save a dated screenshot or reading for each provider. Record
+the time in IST, website order volume, and whether catalogue sync was running:
+
+- Railway web service: average and peak RAM and CPU, time above each typical
+  peak, outbound data transfer, resource usage in dollars, errors and restarts.
+- Neon primary: CU-hours, public transfer, database storage, typical and peak
+  allocated CU, peak used RAM, and how long it stayed elevated. Record compute
+  sleep periods and the time of any unusual spike.
+- Checkout: capture a few order-to-Tally confirmation times during peak hours.
+  Record failed or delayed orders and match unusual events across logs.
+
+At month end, compare the final bills separately. Size the replacement from
+sustained peak load with room for checkout and agent sync to overlap. Retain the
+largest brief spikes, their durations, and their causes when known. Verify a
+candidate against the one-minute order-to-Tally target before moving live data.
+
+2026-11-15 | Railway storage for owner pause and resume
+The website now uses the mounted Railway volume by default and rejects
+configured paths outside that volume. The 0.6.18 laptop protocol is unchanged.
+Verify the pause survives a website redeploy and that the laptop still reports
+Paused after its next checks. This website change has not been deployed.
+
+2026-11-14 | Owner website pause and resume for laptop sync
+Owners can check, pause or resume the business laptop under More. The updated
+0.6.18 packaged agent checks a Railway endpoint about every 20 seconds between
+jobs. The agent endpoint uses a token and a persistent file, with no Neon access.
+Once work in progress finishes, pause stops order pickup, automatic invoicing,
+cloud publishing and cleanup. Website orders queue while local Tally reads continue.
+A linked agent holds cloud work if it cannot read the remote setting.
+
+Deploy the website code. Attach a persistent volume to the single Railway web
+replica (for example, /data). The website reads the Railway mount automatically.
+Set SAARTHI_AGENT_SYNC_TOKEN to a new private random token, for example 64 hex
+characters from Python's secrets.token_hex(32). Use the same token in
+Saarthi Admin > Updates & setup > Website pause control with the website HTTPS
+address. Use Stop agent then Start agent to load those settings. Keep live mode
+enabled if orders should resume invoicing after the remote pause is lifted.
+The signed 0.6.18 Windows update was published and verified on the existing
+GitHub release feed. Website deployment and live Neon sleep testing are pending.
+
+Verify with the owner account and a salesperson account. While the status shows
+Paused, place a test order and check it stays queued. After other clients are
+idle, check Neon Monitoring for Endpoint inactive. Resume and verify the order
+syncs once. The manual Windows Stop agent still exits the process. Launch it
+from Windows before expecting website control again. No Neon migration needed.
+
+2026-11-14 | Start and stop the laptop agent from Admin
+Open Sync & backups and choose Stop agent. Current work finishes before the
+process exits. Restarting Admin preserves the stop setting until Start agent
+is selected. The live-mode checkbox still controls which jobs are enabled.
+Install an Admin release that includes the matching updated agent. Verify by
+stopping it, confirming Stopped after current work, reopening Admin, then
+starting it and checking that the recorded jobs resume.
+
+2026-11-14 | Cloud release preflight
+Added a paste-ready audit covering current tables, columns, data types,
+nullability, defaults, constraints and indexes. A clean PostgreSQL 18 reference
+passed. Removing invoice_date, the unique order retry index, and the pending
+rate table was detected, as was a changed column nullability. Live audit pending.
+
+2026-11-14 | Order retry and invoice dates
+A dated checkout failed with HTTP 500 because live cloud_order was missing
+invoice_date. The database migration was applied in saarthi_live, and the user
+confirmed the retry succeeded. The saved submission kept its request ID and lines.
+The website retry screen update moves Check / Retry above the items and shows the
+latest error inline. Deploy the website to use the new screen. Verify by retrying
+a saved test order and checking that only one order is created.
+
+2026-11-14 | Owner edits to Our rate
+Owners can edit Our rate inline in the website product cards. Selling rates are
+queued in public.pending_our_rate until the updated laptop agent stores them.
+The website and agent need the cloud schema from python cloud_db.py --our-rate-schema.
+Verify a test rate appears in desktop Products & stock after catalogue sync.
+
+2026-11-14 | Website automatic refresh hours
+Website and installed phone app auto-refresh from 9 am to 7 pm IST. Deploy the
+website to apply the schedule. Check that an open app stops polling at 7 pm and
+that opening it or choosing Refresh data still loads fresh data.
+
+2026-11-17 | Purchase rate info on website product cards
+On the owner's party catalogue, use the i button at the top right of a product
+card to reveal the purchase rate and unit for two seconds. Last price stays
+visible when available. Deploy the website and verify this by opening a party
+with purchase history. Sign in as a salesperson to check the button is absent.
+2026-11-18 | Confirm and resume website pauses on the laptop
+Website pause drains the current jobs and pauses scheduled work. The agent
+continues checking Railway so the owner can resume from either device. The
+phone checks for confirmation while the control is open. Sync & backups shows
+the confirmed pause and offers Start agent to resume. Manual Stop agent exits.
+Deploy the website and install the matching Admin and agent package. Verify
+the owner can pause, see Start agent on the laptop, and resume from either
+device. Check that platform logs still show poll requests during the pause.
+This change needs no Neon migration.
+
+2026-11-18 | Windows update 0.6.19 for website pause and resume
+Railway was serving the updated sync control while the Windows update feed
+still offered 0.6.18. Published and verified the signed 0.6.19 update on the
+public GitHub feed. Install it through Updates & setup on the business
+laptop, then check Pause laptop sync and Start agent with the new agent running.
+
+2026-11-18 | Aadhya Enterprises website branding
+Updated the shared company display name to Aadhya Enterprises for the website
+header and printed invoices and orders, including Save PDF. Deploy the website
+and reopen it, then verify the header and an invoice print preview.
+
+2026-11-18 | Phone website update prompt
+The installed phone app checks its release when opened or brought to the foreground and
+shows Update available with a Reload button. Reload saves order drafts and
+waits for active order submissions and unsaved owner forms. Version checks use
+Railway static release metadata without a Neon query. Deploy the website,
+reload existing phone sessions once, then verify a later deployment prompts
+on return to the app and that the draft survives Reload.
+Regular browser tabs skip the installed-app version check and update banner.
+
+2026-11-18 | Anonymized public showcase material
+Manual integration tests use TEST_OWNER_EMAIL with a fictional example default.
+Invoice XML examples use fictional products and consistent quantities and prices.
+The architecture PDF has an anonymous recipient. Ignore local control markers
+and database exports. The showcase copy is prepared with fresh Git history to
+exclude earlier private values. Verify the exact showcase tree and Git history
+with the secret scanner before sharing its repository link.

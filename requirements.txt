@@ -1,0 +1,12 @@
+# The website API only. The laptop side (tally_connector, tally_store,
+# tally_agent) is stdlib + psycopg and is never deployed.
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+# [pool] matters: a fresh connection to Railway's public proxy
+# costs ~11s, which an unpooled API pays on every request.
+psycopg[binary,pool]==3.3.5
+google-auth==2.62.0
+# google-auth's token verification transport. Without it every
+# Google sign-in fails at import time, not at verification.
+requests==2.34.2
+itsdangerous==2.2.0

@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Saarthi Admin</title><link rel="stylesheet" href="/admin.css"></head>
+<body><aside class="sidebar"><a class="brand" href="#overview"><span class="mark">S</span><span>Saarthi<b>ADMIN WORKSPACE</b></span></a>
+<div class="workspace"><span class="dot"></span> LOCAL DATABASE <small id="company">Connecting to archive…</small></div>
+<nav id="nav"><button data-view="overview" class="active">◈ <span>Overview</span></button><button data-view="analysis">◷ <span>Analysis</span></button><button data-view="transactions">＋ <span>Transactions</span></button><button data-view="orders">▤ <span>Orders</span></button><button data-view="vouchers">▧ <span>Tally vouchers</span></button><button data-view="parties">♙ <span>Parties & ledgers</span></button><button data-view="products">▦ <span>Products & stock</span></button><button data-view="website">♧ <span>Website access</span></button><button data-view="explorer">⌘ <span>Data explorer</span></button><button data-view="updates">⇩ <span>Updates & setup</span></button><button data-view="sync">↻ <span>Sync & backups</span></button></nav>
+<button id="sidebar-update" type="button" hidden aria-label="Install available Saarthi update" title="Save unfinished forms, then install the update."><b aria-hidden="true">⇩</b><span>Update available<small id="sidebar-update-version"></small></span></button>
+<div class="sidebar-foot"><b>Full local history</b><p>Available without internet.<br>Tally remains the accounting authority.</p><button id="exit">Exit admin</button></div></aside>
+<div class="shell"><header><div class="breadcrumb">Workspace <span>/</span> <b id="crumb">Overview</b></div><div class="header-right"><span id="loaded">Loading…</span><button id="refresh">↻ Refresh</button><span class="avatar">A</span></div></header>
+<main id="main" aria-live="polite"><div class="empty">Opening your local archive…</div></main></div>
+<dialog id="detail"><div class="dialog-head"><h2 id="detail-title">Details</h2><button id="close-detail" aria-label="Close details">×</button></div><div id="detail-body"></div></dialog>
+<div id="toast" role="status" hidden></div><script src="/list-tools.js"></script><script src="/product-image.js"></script><script src="/admin.js"></script><script src="/transactions.js"></script><script src="/analysis.js"></script><script src="/updates.js"></script><script src="/inventory.js"></script></body></html>

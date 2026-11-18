@@ -1,0 +1,58 @@
+<!-- Fictional sample. All parties, products, quantities and prices are illustrative. -->
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Import Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <IMPORTDATA>
+      <REQUESTDESC>
+        <REPORTNAME>Vouchers</REPORTNAME>
+        <STATICVARIABLES>
+          <SVCURRENTCOMPANY>REPLACE_WITH_TALLY_COMPANY_NAME</SVCURRENTCOMPANY>
+        </STATICVARIABLES>
+      </REQUESTDESC>
+      <REQUESTDATA>
+        <TALLYMESSAGE xmlns:UDF="TallyUDF">
+          <VOUCHER VCHTYPE="Sales" ACTION="Create" OBJVIEW="Invoice Voucher View">
+            <DATE>REPLACE_WITH_YYYYMMDD</DATE>
+            <EFFECTIVEDATE>REPLACE_WITH_YYYYMMDD</EFFECTIVEDATE>
+            <VOUCHERTYPENAME>Sales</VOUCHERTYPENAME>
+            <PARTYLEDGERNAME>Sample Customer [Demo Town]</PARTYLEDGERNAME>
+            <PARTYNAME>Sample Customer [Demo Town]</PARTYNAME>
+            <ISINVOICE>Yes</ISINVOICE>
+            <PERSISTEDVIEW>Invoice Voucher View</PERSISTEDVIEW>
+            <VCHENTRYMODE>Item Invoice</VCHENTRYMODE>
+            <REFERENCE>REPLACE_WITH_UNIQUE_INVOICE_REFERENCE</REFERENCE>
+            <NARRATION>Sales invoice from external XML</NARRATION>
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>Sample Cleaning Product</STOCKITEMNAME>
+              <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+              <RATE>50.00/PCS</RATE>
+              <AMOUNT>100.00</AMOUNT>
+              <ACTUALQTY>2 PCS</ACTUALQTY>
+              <BILLEDQTY>2 PCS</BILLEDQTY>
+              <BATCHALLOCATIONS.LIST>
+                <GODOWNNAME>Main Location</GODOWNNAME>
+                <BATCHNAME>Primary Batch</BATCHNAME>
+                <AMOUNT>100.00</AMOUNT>
+                <ACTUALQTY>2 PCS</ACTUALQTY>
+                <BILLEDQTY>2 PCS</BILLEDQTY>
+              </BATCHALLOCATIONS.LIST>
+              <ACCOUNTINGALLOCATIONS.LIST>
+                <LEDGERNAME>SALES</LEDGERNAME>
+                <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+                <AMOUNT>100.00</AMOUNT>
+              </ACCOUNTINGALLOCATIONS.LIST>
+            </ALLINVENTORYENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>Sample Customer [Demo Town]</LEDGERNAME>
+              <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+              <ISPARTYLEDGER>Yes</ISPARTYLEDGER>
+              <AMOUNT>-100.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+          </VOUCHER>
+        </TALLYMESSAGE>
+      </REQUESTDATA>
+    </IMPORTDATA>
+  </BODY>
+</ENVELOPE>

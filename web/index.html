@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>Saarthi Sales</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#faf9fd">
+<script>
+  try {
+    if (localStorage.getItem('saarthi-theme') === 'dark') {
+      document.documentElement.dataset.theme = 'dark';
+      document.querySelector('meta[name="theme-color"]').content = '#0d1412';
+    }
+  } catch (e) {}
+</script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Saarthi">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
+<script src="https://accounts.google.com/gsi/client" async></script>
+<link rel="stylesheet" href="styles.css?v=2026110501">
+<link rel="stylesheet" href="app.css?v=2026111702">
+
+</head><body>
+<div class="stage">
+  <div class="device" id="device">
+    <div class="app" id="app">
+      <div class="app-inner" id="appInner">
+        <div class="col">
+          <header class="appbar" id="appbar"></header>
+          <main class="main" id="main"></main>
+          <nav class="tabbar" id="tabbar" aria-label="Modules"></nav>
+        </div>
+      </div>
+      <div id="overlay"></div>
+      <div class="toasts" id="toasts"></div>
+    </div>
+  </div>
+</div>
+
+<script charset="utf-8" src="data.js?v=2026111801"></script>
+<script charset="utf-8" src="core.js?v=2026111314"></script>
+<script charset="utf-8" src="sales.js?v=2026110301"></script>
+<script charset="utf-8" src="sales-simple.js?v=2026111702"></script>
+<script charset="utf-8" src="planner.js?v=2026110301"></script>
+<script charset="utf-8" src="visits.js?v=2026111307"></script>
+<script charset="utf-8" src="analytics.js?v=2026110301"></script>
+<script charset="utf-8" src="desk.js?v=2026110301"></script>
+<script charset="utf-8" src="shell.js?v=2026111406"></script>
+<script charset="utf-8" src="admin.js?v=2026110301"></script>
+<script charset="utf-8" src="dash.js?v=2026110301"></script>
+<script charset="utf-8" src="ops.js?v=2026111702"></script>
+<script charset="utf-8" src="drafts.js?v=2026111405"></script>
+<script charset="utf-8" src="live.js?v=2026111801"></script>
+<script charset="utf-8" src="pwa.js?v=2026111801"></script>
+<script>boot();</script>
+
+</body></html>
