@@ -1,123 +1,33 @@
 # Saarthi
 
-Saarthi helps a distribution business take orders in the field, prepare invoices in the office, and keep owners informed through a mobile website connected to Tally. It brings together the salesperson visiting a shop, the office team handling billing and inventory, and the owner reviewing business performance.
+Saarthi connects a distributor’s field sales team with its office and Tally accounting system. It is used by a real business. This public showcase contains anonymized examples and a fresh Git history.
 
-The project is used by a real business. This showcase contains anonymized examples and a fresh Git history prepared for public review.
+## The use case
 
-## The problem it addresses
+Distributors take orders from shops across multiple routes. Salespeople need stock availability, customer purchase history and selling prices during each visit. The office needs those orders in Tally, while the owner needs visibility into billing and field activity.
 
-A distributor sells many products to shops across different routes. Each shop has its own buying history, outstanding balance, and previously agreed selling prices. During a visit, a salesperson needs enough context to take a useful order quickly. Meanwhile, the office needs the correct customer, products, quantities and rates to prepare the invoice in Tally.
+Saarthi connects these steps through a mobile website, a Windows Admin application and a background synchronization agent.
 
-When orders travel through phone calls, messages or handwritten notes, the office has to interpret and enter them again. A salesperson may need to call for a stock check or ask what price a customer last paid. An owner away from the office has to ask someone for updates on orders, invoices and field visits.
+- **Salespeople** open a customer’s account, check previous purchases and stock, enter rates and quantities, record visits, and submit orders from their phones. Saved drafts and a retry flow help recover interrupted submissions.
+- **Office staff** review orders and invoices, manage selling rates and product images, control which products appear online, and synchronize orders with Tally for billing.
+- **Owners** review sales, invoices, customer activity and team visits remotely. Owner access also includes purchase rates and controls to pause or resume laptop synchronization.
 
-Saarthi provides a shared workflow for those handoffs. The field team captures structured orders on their phones. A Windows agent transfers orders to the office's Tally installation and publishes updated data to the website. The owner can review the information remotely.
-
-## Who uses Saarthi
-
-| Person | What Saarthi helps them do |
-| --- | --- |
-| Field salesperson | Open a customer, review previous purchases and stock, take an order, record a visit, and follow submitted orders. |
-| Office team | Review orders and Tally vouchers, manage selling rates and product presentation, and control synchronization through the Windows Admin application. |
-| Business owner | Review sales, invoices, customer and team activity, access purchase rates, and pause or resume the laptop's scheduled work from the website. |
-
-## A sales visit from start to finish
-
-Imagine a salesperson visiting a neighbourhood shop that regularly buys soap, hair oil and household cleaning products.
-
-1. **Open the shop's account.** The salesperson selects the customer and sees the account context, including outstanding dues and products bought before.
-2. **Build an informed order.** Previously purchased products are grouped together, with available stock prioritized within the relevant groups. The salesperson can search the wider catalogue and check stock quantities while discussing the order.
-3. **Use the right starting price.** The rate field gives priority to the business's configured selling rate. If it is unavailable, the customer's last sold price is used where available. The salesperson can enter the order's agreed rate and quantity.
-4. **Review before submitting.** The review screen shows the items and total, supports an invoice date, and suggests previously purchased or relevant products that could be added to the bill.
-5. **Send the order to the office.** The cloud API saves the submission. The laptop agent picks it up for processing in Tally when the required services and live invoicing are available.
-6. **Follow the outcome.** The submitted order and its billing information can be reviewed through the application's order views. Updated Tally data is synchronized back through the local archive and cloud.
-
-The draft is saved on the device during order entry. If the connection drops while placing the order, Saarthi retains the submission identity and offers a check/retry flow so the backend can recognize a repeated request.
-
-## More than order entry
-
-**Customer context during a visit.** Purchase history helps a salesperson remember a shop's usual basket and identify items to discuss. Visit records also make activity visible when a customer visit produces no order.
-
-**Product management in the office.** The office can configure its selling rates, assign product images, and hide selected products from the website. Bulk tools help manage a larger catalogue. Product and purchase information comes from Tally, while Saarthi manages the website's presentation and its own selling rates.
-
-**Visibility for an owner away from the office.** Owner views bring together sales, order status, invoices, visits and team activity. Purchase rates are restricted to owners. These views support everyday questions about what has been billed, which orders need attention and how the field team is performing.
-
-**A usable Windows application for the business laptop.** Admin provides access to the local archive and agent controls. Publisher-signed updates let the business install newer versions through an update feed. Owners can also send pause and resume commands from the website to control scheduled laptop work.
-
-## Working with real operating conditions
-
-The workflow accounts for interrupted connections, a laptop being offline, and records being edited in Tally. Saved drafts and persistent submission identities support recovery during order placement. Company identity checks help keep the agent bound to the intended Tally company. Voucher synchronization includes reconciliation of invoice edits and deletions.
-
-The local SQLite archive supports office-side history and processing, while PostgreSQL holds the cloud data used by the website. Synchronization depends on the business laptop, agent, Tally and network being available. Submitted cloud orders await pickup while the laptop is offline or syncing is paused.
-
-## Why I built it
-
-Saarthi grew around the needs of an operating distribution business. Building it involved connecting mobile order entry, a Windows application, cloud APIs and an existing accounting system, then handling the failures and corrections that appear during everyday use.
-
-The result is a project that demonstrates both product workflow and engineering work. Customer history informs the ordering screen, access rules determine what each person can see, and synchronization and recovery logic carry an order across the phone, cloud and office laptop.
+For example, during a shop visit, a salesperson can find the customer’s usual products, use the configured selling rate or available last sold price, and submit the order. The laptop agent picks it up for Tally processing and publishes updated billing information back to the website. Orders await pickup while the laptop is offline or synchronization is paused.
 
 ## Try the demo
-
-With Python installed, serve the sample website from this repository.
 
 ```sh
 python -m http.server 8000 --directory web
 ```
 
-Open **http://localhost:8000/?demo=1**. This explicit demo mode uses illustrative browser data. Explore parties, select products and review a sample order. It requires neither a cloud database nor a Tally connection. Production integrations require the setup described below.
-
-## What it does
-
-- Mobile product catalogue with customer purchase history, stock, editable order quantities, and selling prices.
-- Saved order drafts and submission retries using a persistent request identity.
-- Local Windows application for product visibility, images, selling rates, and synchronization controls.
-- Tally invoice integration with company identity verification and edit/deletion reconciliation.
-- Owner views for sales, invoices, visits, customer activity, and team performance.
-- Publisher-signed Windows updates and owner controls for pausing the laptop's scheduled work.
-
-## Architecture
-
-```text
-Salesperson / owner phone
-          |
-          v
-JavaScript website + FastAPI
-          |
-          v
-PostgreSQL cloud database
-          ^
-          |
-Windows agent + local SQLite archive
-          |
-          v
-       TallyPrime
-```
-
-The agent also checks the website's control endpoint to receive owner pause and resume commands.
+Open **http://localhost:8000/?demo=1** to explore the sample ordering workflow. The demo uses illustrative data and runs without a Tally or cloud database connection.
 
 ## Technology
 
-Python, FastAPI, JavaScript, HTML/CSS, SQLite, PostgreSQL, Neon, Railway, Tally XML integration, and packaged Windows applications.
+Python · FastAPI · JavaScript · HTML/CSS · SQLite · PostgreSQL · Neon · Railway · Tally XML integration
 
-## Code map
+## Explore the implementation
 
-| Area | Entry points |
-| --- | --- |
-| Cloud API and access control | `api.py`, `cloud_db.py` |
-| Mobile website | `web/` |
-| Tally connector and scheduled work | `tally_connector.py`, `tally_agent.py`, `tally_store.py` |
-| Local Windows application | `desktop_app.py`, `desktop/` |
-| Order delivery to Tally | `tally_invoice.py`, `tally_cloud.py` |
-| Updates and releases | `build_desktop.ps1`, `desktop_release.py`, `publish_desktop.py` |
-| Regression checks | `tests/` |
+Read the [architecture](ARCHITECTURE.md), [Windows Admin guide](DESKTOP_ADMIN.md), or [deployment and update guide](DEPLOYMENT_AND_UPDATES.md). Configuration examples are in `.env.example`.
 
-## Development and integration setup
-
-Start with [DESKTOP_ADMIN.md](DESKTOP_ADMIN.md), [DEPLOYMENT_AND_UPDATES.md](DEPLOYMENT_AND_UPDATES.md), and [ARCHITECTURE.md](ARCHITECTURE.md). `.env.example` documents environment settings. Provision your own credentials for a live integration.
-
-The root scripts `test_api.py`, `test_newparty.py`, and `test_people.py` exercise connected environments and can create or change records. Use an isolated test environment and set `TEST_OWNER_EMAIL` to its authorized owner account. The `tests/` directory contains separate regression checks.
-
-The XML files are fictional reference examples. Their ledger names, products, prices and quantities require adaptation to a test Tally company before importing.
-
-## Public copy
-
-Production credentials, local databases, backups, private signing keys and the original repository history are excluded. The architecture review PDF is an earlier technical assessment with an anonymized recipient. The desktop update links in the deployment documentation point to the existing publisher feed.
+Live integrations require your own credentials and Tally setup. The root integration test scripts can change connected records, so run them against a test environment. Production credentials, business databases and private signing keys are excluded from this showcase.
